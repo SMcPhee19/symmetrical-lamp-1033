@@ -1,4 +1,4 @@
-<h1>Customers</h1>
+<h1>Customer</h1>
 <br>
 <h2>Name: <%= @customer.name %></h2>
 <h3>Items:</h3>
@@ -9,3 +9,15 @@
     <%= item.supermarket.name %>
   </li>
 <% end %>
+<br>
+<h2>Add Item</h2>
+<%= form_with url: '/customers/:id', method: :post, local: true do |form|  %>
+  <%= form.label :name %>
+  <%= form.text_field :name %>
+  <%= form.label :price %>
+  <%= form.text_field :price %>
+  <%= form.label :supermarket %>
+  <%= form.text_field :supermarket %>
+  <%= form.submit %>
+<% end %>
+  
