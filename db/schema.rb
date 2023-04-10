@@ -10,10 +10,47 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_29_140409) do
+ActiveRecord::Schema.define(version: 2023_04_10_153114) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "customers", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "customers_items", id: false, force: :cascade do |t|
+    t.bigint "customer_id", null: false
+    t.bigint "item_id", null: false
+    t.index ["customer_id", "item_id"], name: "index_customers_items_on_customer_id_and_item_id"
+    t.index ["item_id", "customer_id"], name: "index_customers_items_on_item_id_and_customer_id"
+  end
+
+  create_table "departments", force: :cascade do |t|
+    t.string "name"
+    t.string "floor"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "employees", force: :cascade do |t|
+    t.string "name"
+    t.integer "level"
+    t.bigint "department_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["department_id"], name: "index_employees_on_department_id"
+  end
+
+  create_table "employees_tickets", id: false, force: :cascade do |t|
+    t.bigint "employee_id"
+    t.bigint "ticket_id"
+    t.index ["employee_id", "ticket_id"], name: "index_employees_tickets_on_employee_id_and_ticket_id", unique: true
+    t.index ["employee_id"], name: "index_employees_tickets_on_employee_id"
+    t.index ["ticket_id"], name: "index_employees_tickets_on_ticket_id"
+  end
 
   create_table "items", force: :cascade do |t|
     t.string "name"
@@ -31,4 +68,15 @@ ActiveRecord::Schema.define(version: 2022_10_29_140409) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tickets", force: :cascade do |t|
+    t.string "subject"
+    t.integer "age"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "employee_id"
+    t.index ["employee_id"], name: "index_tickets_on_employee_id"
+  end
+
+  add_foreign_key "employees", "departments"
+  add_foreign_key "tickets", "employees"
 end
